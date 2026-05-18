@@ -18,8 +18,17 @@ RUN apt-get -qq update && rosdep update && \
 ################################# Dependencies ################################
 FROM ${BASE_IMAGE} AS dependencies
 
+# Refresh the (expired) ROS 2 apt GPG key in place so apt-get update can
+# pull a fresh package list. Without this we are stuck with a stale index
+# that references .deb files no longer on the mirror.
+RUN apt-get update -o Acquire::AllowInsecureRepositories=true \
+        -o Acquire::AllowDowngradeToInsecureRepositories=true || true && \
+    apt-get install -y --allow-unauthenticated curl gnupg && \
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+        -o /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+
 # Install Foxglove Deps
-RUN apt-get update && apt-get install -y curl ros-humble-ros2bag ros-humble-rosbag2* ros-humble-foxglove-msgs&& \
+RUN apt-get update && apt-get install -y --fix-missing curl ros-humble-ros2bag ros-humble-rosbag2 ros-humble-foxglove-msgs && \
     rm -rf /var/lib/apt/lists/*
 
 # Set up apt repo

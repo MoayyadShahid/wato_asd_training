@@ -1,3 +1,10 @@
-# control_node:
-#   ros__parameters:
-    
+control_node:
+  ros__parameters:
+    lookahead_distance: 1.0
+    goal_tolerance: 0.3
+    linear_speed: 0.5
+    max_angular_speed: 1.5
+    control_period_ms: 100
+    path_topic: "/path"
+    odom_topic: "/odom/filtered"
+    cmd_vel_topic: "/cmd_vel"

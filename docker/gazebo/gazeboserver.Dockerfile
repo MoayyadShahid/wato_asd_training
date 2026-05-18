@@ -18,6 +18,14 @@ RUN apt-get -qq update && rosdep update && \
 ################################# Dependencies ################################
 FROM ${BASE_IMAGE} AS dependencies
 
+# Refresh the (expired) ROS 2 apt GPG key so apt-get update can refresh
+# the package list (the base image ships with a stale key).
+RUN apt-get update -o Acquire::AllowInsecureRepositories=true \
+        -o Acquire::AllowDowngradeToInsecureRepositories=true || true && \
+    apt-get install -y --allow-unauthenticated curl gnupg && \
+    curl -sSL https://raw.githubusercontent.com/ros/rosdistro/master/ros.key \
+        -o /usr/share/keyrings/ros2-latest-archive-keyring.gpg
+
 # RUN apt-key adv --keyserver keyserver.ubuntu.com --recv-keys A4B469963BF863CC
 RUN apt-get update && apt-get install ffmpeg libsm6 libxext6 -y
 

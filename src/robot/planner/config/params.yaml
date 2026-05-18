@@ -1,3 +1,11 @@
-# planner_node:
-#   ros__parameters:
-    
+planner_node:
+  ros__parameters:
+    map_topic: "/map"
+    goal_topic: "/goal_point"
+    odom_topic: "/odom/filtered"
+    path_topic: "/path"
+    map_frame: "sim_world"
+    goal_tolerance: 0.3
+    goal_timeout_seconds: 60.0
+    obstacle_threshold: 50
+    replan_period_ms: 500
